@@ -1,0 +1,30 @@
+<template>
+    <article class="slds-card">
+      <div
+        class="
+          slds-grid slds-wrap
+          slds-grid_align-center
+          slds-card__body slds-card__body_inner
+        "
+      >
+        <img
+          class="logo slds-col slds-size_1-of-1"
+          src={syscoPerksLogo}
+          alt="Sysco Perks Logo"
+        />
+        <template if:true={perksEnrollmentDate}>
+          <div
+            class="
+              slds-text-title_caps
+              slds-text-align_center
+              slds-m-top_x-small
+              slds-col
+              slds-size_1-of-1
+            "
+          >
+            Member Since {perksEnrollmentDate}
+          </div>
+        </template>
+      </div>
+    </article>
+  </template>
