@@ -1,0 +1,37 @@
+.THIS .slds-card {
+	padding: var(--lwc-spacingSmall, 0.75rem) !important;
+}
+
+.THIS .truck-details:not(:last-child) {
+	margin-bottom: 15px;
+}
+
+.THIS .truck {
+	margin-right: 15px;
+	display: flex;
+	align-items: center;
+}
+
+.THIS .truck img {
+	width: 75px;
+}
+
+.THIS .green {
+	color: #04844b;
+}
+
+.THIS .red {
+	color: #ff8b00;
+}
+
+.THIS .blue {
+	color: #1589ee;
+}
+
+.THIS .invoices span:nth-child(even) {
+	background-color: whitesmoke;
+}
+
+.THIS .slds-accordion__section {
+	padding: 0 !important;
+}

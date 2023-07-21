@@ -1,0 +1,120 @@
+<aura:component
+	controller="MySyscoTruckServices"
+	implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+	access="global"
+>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:attribute name="data" type="Object" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="acct" type="Object" />
+	<aura:attribute name="time" type="String" />
+	<aura:attribute name="truckStatusCode" type="String" />
+	<aura:attribute name="apiSource" type="String" />
+	<aura:attribute name="displayInvoice" type="String" />
+	<aura:attribute name="isLoading" type="Boolean" default="true" />
+	<lightning:card class="slds-p-around_small" title="Sysco Delivery">
+		<div class="slds-card slds-p-around_small" style="border: 1px solid rgb(221, 219, 218) !important">
+			<aura:if isTrue="{!v.isLoading}">
+				<lightning:spinner
+					aura:id="spinner"
+					variant="brand"
+					size="small"
+					alternativeText="Application loading spinner"
+				/>
+			</aura:if>
+			<div>
+				<aura:if isTrue="{!v.data}">
+					<aura:iteration items="{!v.data}" var="truck">
+						<div class="slds-grid truck-details">
+							<div class="truck">
+								<aura:if isTrue="{!v.truckStatusCode == 'green'}">
+									<img src="{!$Resource.MySyscoTruck + '/truck_green.png'}" alt="truck image green" />
+									<aura:set attribute="else">
+										<aura:if isTrue="{!or(v.truckStatusCode == 'blue')}">
+											<img src="{!$Resource.MySyscoTruck + '/truck_blue.png'}" alt="truck image blue" />
+											<aura:set attribute="else">
+												<img src="{!$Resource.MySyscoTruck + '/truck_red.png'}" alt="truck image red" />
+											</aura:set>
+										</aura:if>
+									</aura:set>
+								</aura:if>
+							</div>
+							<div class="info slds-col">
+								<div>
+									<aura:if isTrue="{!v.apiSource == 'MST'}">
+										<div>
+											<span>
+												<strong>Order Number: </strong>
+											</span>
+											<span> {!truck.orderNumber} </span>
+										</div>
+									</aura:if>
+									<div>
+										<span>
+											<strong>Status: </strong>
+										</span>
+										<span class="{!(v.truckStatusCode=='green'?'green':(v.truckStatusCode=='blue'?'blue':'red'))}"
+											>{!truck.status}</span
+										>
+									</div>
+									<div>
+										<span>
+											<aura:if isTrue="{!or(truck.status == 'Arrived', truck.status == 'Completed')}"
+												><strong>Arrival Time: </strong>{!truck.actualArrivalTime}
+												<aura:if isTrue="{!(truck.delayStatus == 'Delayed')}">
+													<div class="red"><strong>Delay: </strong> {!truck.delay}</div>
+												</aura:if>
+												<aura:if isTrue="{!(truck.delayStatus == 'Early')}">
+													<div class="green"><strong>Early: </strong> {!truck.delay}</div>
+												</aura:if>
+											</aura:if>
+
+											<aura:if isTrue="{!and(truck.status != 'Arrived', truck.status != 'Completed')}">
+												<strong>Estimated Time: </strong> {!truck.estimatedArrivalTimeFrom} -
+												{!truck.estimatedArrivalTimeTo}
+											</aura:if>
+										</span>
+									</div>
+								</div>
+								<div class="slds-grid">
+									<div class="slds-col slds-size_1-of-3">
+										<span> <strong>Route: </strong> {!truck.routeNumber} </span>
+									</div>
+									<div class="slds-col slds-size_1-of-3">
+										<span> <strong>Cases: </strong>{!truck.quantity} </span>
+									</div>
+									<div class="slds-col slds-size_1-of-3">
+										<span> <strong>Stops: </strong> {!truck.stopNumber} </span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<aura:if isTrue="{!and(truck.invoices, v.displayInvoice == 'Yes')}">
+							<lightning:accordion allowMultipleSectionsOpen="true" class="slds-m-top_medium">
+								<lightning:accordionSection name="A" label="Invoices">
+									<aura:set attribute="body">
+										<aura:iteration items="{!truck.invoices}" var="item">
+											<div class="slds-p-horizontal_medium slds-grid">
+												<span class="slds-col slds-size_1-of-2">
+													<span><strong>Invoice Number: </strong></span>
+													<span> {!item.invoiceNumber}</span>
+												</span>
+												<span class="slds-col slds-size_1-of-2">
+													<span><strong>Qty: </strong></span>
+													<span> {!item.quantity}</span>
+												</span>
+											</div>
+										</aura:iteration>
+									</aura:set>
+								</lightning:accordionSection>
+							</lightning:accordion>
+						</aura:if>
+					</aura:iteration>
+					<aura:set attribute="else">
+						<span class="slds-align_absolute-center">There are no deliveries available</span>
+					</aura:set>
+				</aura:if>
+			</div>
+		</div>
+	</lightning:card>
+</aura:component>
